@@ -7,21 +7,43 @@ const Weather = () => {
     let [weather, setWeather] = useState({});
 
     useEffect(() => {
-        (async function () {
-            try{
-                let response = await axios.get(`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=cbf6566e445cd4fdf49a39c8bbc0376c`);
-                console.log(response);
-                setWeather(response.data)
-            }
-            catch(err){
-                console.log(err);
-            }
-        }())
-    }, [city])
+        (function (wait) {
+            let timeout;
+            (function () {
+                if (timeout) {
+                    clearTimeout(timeout);
+                }
+                if (city == '') {
+                    return
+                }
+                timeout = setTimeout(async () => {
+                    try {
+                        let response = await axios.get(`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=cbf6566e445cd4fdf49a39c8bbc0376c`);
+                        console.log(response);
+                        setWeather(response.data)
+                    }
+                    catch (err) {
+                        console.log(err);
+                    }
+                }, wait)
+            }())
+        }(1000))
+    }, [city]);
+
+    function change(value) {
+        let timeout;
+        if (timeout) {
+            clearTimeout(timeout);
+        }
+        timeout = setTimeout(() => {
+            setCity(value)
+        }, 1000)
+
+    }
 
     return (
         <div>
-            <input className="search" type="text" onChange={(e) => { setCity(e.target.value) }}></input>
+            <input className="search" type="text" onChange={(e) => { change(e.target.value) }}></input>
             {
                 weather.weather &&
                 <div className="weather">
