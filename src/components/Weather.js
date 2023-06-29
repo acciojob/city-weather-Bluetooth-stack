@@ -8,9 +8,14 @@ const Weather = () => {
 
     useEffect(() => {
         (async function () {
-            let response = await axios.get(`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=cbf6566e445cd4fdf49a39c8bbc0376c`);
-            console.log(response);
-            setWeather(response.data)
+            try{
+                let response = await axios.get(`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=cbf6566e445cd4fdf49a39c8bbc0376c`);
+                console.log(response);
+                setWeather(response.data)
+            }
+            catch(err){
+                console.log(err);
+            }
         }())
     }, [city])
 
